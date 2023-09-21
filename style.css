@@ -11,6 +11,10 @@ body {
     justify-content: center;
 }
 
+.mt {
+    margin-top: 20px;
+}
+
 .loading {
     background-color: #000;
     height: 100vh;
@@ -52,6 +56,20 @@ body {
 }
 
 .loading-text.show span{
+    animation: glow-in-text .2s both;
+}
+
+.loading-title {
+    text-align: center;
+    color: #fff;
+
+    font-size: 18px;
+    text-transform: uppercase;
+
+    opacity: 0;
+}
+
+.loading-title.show {
     animation: glow-in-text .2s both;
 }
 
