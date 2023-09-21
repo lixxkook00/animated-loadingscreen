@@ -1,5 +1,5 @@
-const LOADING_TEXT_DELAY = 0.1;
-const LOADING_TITLE_DELAY = 0.1;
+const LOADING_TEXT_DELAY = 0.025;
+const LOADING_TITLE_DELAY = 0.5;
 
 const loadingEl = document.querySelector('#loading');
 const loadingTextEl = document.querySelector('#loading-text');
@@ -8,24 +8,38 @@ const loadingTitleEl = document.querySelector('#loading-title');
 const loadingTextContent = loadingTextEl.textContent
 loadingTextEl.innerText = ""
 
-let totalTitleDelay = (loadingTextContent.length - 1)* LOADING_TEXT_DELAY + LOADING_TITLE_DELAY;
+let totalTitleDelay = (loadingTextContent.length - 1)* LOADING_TEXT_DELAY*10 + LOADING_TITLE_DELAY;
 
-for (let i = 0; i < loadingTextContent.length; i++) {
+function appendLetterWithDelay(index) {
     const span = document.createElement("span");
-    span.textContent = loadingTextContent[i];
-    span.style.animationDelay = `${i * LOADING_TEXT_DELAY}s`;
+    span.textContent = loadingTextContent[index];
+    if(loadingTextContent[index] === " "){
+        span.style.paddingLeft = '10px'
+    }
     loadingTextEl.appendChild(span);
+
+    if (index < loadingTextContent.length - 1) {
+        span.addEventListener("animationend", function() {
+            appendLetterWithDelay(index + 1);
+        });
+    }else {
+        span.addEventListener("animationend", function() {
+            loadingTextEl.classList.add('done');
+
+            loadingTitleEl.style.animationDelay = `${LOADING_TITLE_DELAY}s`;
+            loadingTitleEl.classList.add('show');
+        });
+    }
 }
+  
 
 window.addEventListener('load', function() {
     loadingLogoEl.classList.add('show');
     
     loadingLogoEl.addEventListener('animationend', () => {
-        loadingTextEl.classList.add('show');
-
-        loadingTitleEl.style.animationDelay = `${totalTitleDelay}s`;
-        loadingTitleEl.classList.add('show');
         
+        loadingTextEl.classList.add('show');
+        appendLetterWithDelay(0);
     });
 
     loadingEl.onclick = () => {
